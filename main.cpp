@@ -113,6 +113,7 @@ gcry_sexp_t HashGenerate(FILE* file) {
     gcry_sexp_build(&hash, NULL, "(data (flags raw) (value %s))", data);
 
     gcry_md_close(hd);
+<<<<<<< HEAD
 
     return hash;
 }
@@ -146,6 +147,46 @@ void DigitalSignatureGenerate(char* argv[]) {
     hash = HashGenerate(DataFile); // хеширование
 
     errorCode = gcry_pk_sign(&DigitalSignature, hash, secretKey); // генерация ЭЦП
+=======
+
+    return hash;
+}
+
+void DigitalSignatureGenerate(char* argv[]) {
+    gcry_sexp_t DigitalSignature;
+    gpg_error_t errorCode;
+
+    FILE *file = fopen(argv[1], "rb");
+    if (file == NULL) {
+        printf("Error opening file %s\n", argv[1]);
+        exit(OPEN_FILE_ERROR);
+    }
+
+    FILE *SignFile = fopen(argv[2], "w");
+    if (SignFile == NULL) {
+        printf("Error opening file %s\n", argv[2]);
+        exit(OPEN_FILE_ERROR);
+    }
+
+    FILE *PubKeyFile = fopen(argv[3], "w");
+    if (PubKeyFile == NULL) {
+        printf("Error opening file %s\n", argv[3]);
+        exit(OPEN_FILE_ERROR);
+    }
+
+    //-------------- ГЕНЕРАЦИЯ КЛЮЧЕЙ
+
+    auto [secretKey, publicKey] = KeyPairGenerate(argv);
+    show_sexp(publicKey, PubKeyFile);
+
+    //--------------- ХЕШИРОВАНИЕ
+
+    gcry_sexp_t hash;
+    hash = HashGenerate(file);
+    //---------------- ЭЦП
+
+    errorCode = gcry_pk_sign(&DigitalSignature, hash, secretKey);
+>>>>>>> 467061a8ed81b693575dec046885ebd10e54cdf6
     if (errorCode) {
         fprintf(stdout, "Signing faild: %s\n", gcry_strerror(errorCode));
         exit(SIGNING_ERROR);
@@ -165,6 +206,7 @@ void DigitalSignatureVerification(char* argv[]) {
     gcry_sexp_t publicKey;
     gcry_sexp_t hash;
     gcry_sexp_t signature;
+    gcry_sexp_t publicKey;
 
     FILE *DataFile = fopen(argv[1], "rb");
     if (DataFile == NULL) {
@@ -183,10 +225,17 @@ void DigitalSignatureVerification(char* argv[]) {
         printf("Error opening file %s\n", argv[3]);
         exit(OPEN_FILE_ERROR);
     }
+<<<<<<< HEAD
+=======
+
+    signature = readSexpFile(SignFile);
+    publicKey = readSexpFile(PubKeyFile);
+>>>>>>> 467061a8ed81b693575dec046885ebd10e54cdf6
 
     signature = readSexpFile(SignFile);
     publicKey = readSexpFile(PubKeyFile);
 
+<<<<<<< HEAD
     hash = HashGenerate(DataFile); // хеширование
 
     errorCode = gcry_pk_verify(signature, hash, publicKey); // верификация
@@ -195,6 +244,42 @@ void DigitalSignatureVerification(char* argv[]) {
     } else fprintf(stdout, "VERIFY SUCCESS\n");
 
     fclose(DataFile);
+=======
+//    gcry_md_hd_t new_hd;
+//    gcry_md_open(&new_hd, GCRY_MD_SHA256, 0);
+
+//    unsigned char new_buffer[BUFFER_SIZE]="";
+//    size_t new_nread;
+
+//    while ((new_nread = fread(new_buffer, 1, sizeof(new_buffer), file)) > 0) {
+//        gcry_md_write(new_hd, new_buffer, new_nread);
+//    }
+
+//    unsigned char * new_hash = gcry_md_read(new_hd, GCRY_MD_SHA256);
+//    fprintf(stdout, "\nHash: ");
+//    for (int i = 0; i < gcry_md_get_algo_dlen(GCRY_MD_SHA256); i++) {
+//        fprintf(stdout, "%c", new_hash[i]);
+//    }
+//    fflush(stdout);
+//    fprintf(stdout, "\n");
+
+//    gcry_sexp_t new_data;
+//    gcry_sexp_build(&new_data, NULL, "(data (flags raw) (value %s))", new_hash);
+
+    gcry_sexp_t hash;
+    hash = HashGenerate(file);
+
+    //--------------- ПРОВЕРКА
+
+    errorCode = gcry_pk_verify(signature, hash, publicKey);
+    if (errorCode) {
+        fprintf(stdout, "verify faild: %s\n\n", gcry_strerror(errorCode));
+        //fprintf(stdout, (const char*)new_buffer);
+    } else fprintf(stdout, "SUCCESS\n");
+
+    //gcry_md_close(new_hd);
+    fclose(file);
+>>>>>>> 467061a8ed81b693575dec046885ebd10e54cdf6
     fclose(SignFile);
     fclose(PubKeyFile);
 
