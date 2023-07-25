@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 6.0.2, 2023-07-25T16:11:38. -->
+<!-- Written by QtCreator 6.0.2, 2023-07-25T16:54:30. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -297,7 +297,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DigitalSignature_libgcrypt</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.DigitalSignature_libgcrypt</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">DigitalSignature_libgcrypt</value>
-    <value type="QString" key="RunConfiguration.Arguments">text.txt output.txt</value>
+    <value type="QString" key="RunConfiguration.Arguments">text.txt output.txt pubkey.txt</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
